@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 2 Interactive Quiz – Introducing Somebody Else</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7fb;
+      color: #1f2937;
+      padding: 30px;
+      line-height: 1.6;
+    }
+
+    .quiz-container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 35px;
+      border: 2px solid #1f2937;
+      border-radius: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      font-size: 20px;
+      font-style: italic;
+      margin-bottom: 30px;
+    }
+
+    .word-bank {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .question {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 25px;
+      background: #ffffff;
+    }
+
+    .question h2 {
+      font-size: 21px;
+      margin-bottom: 12px;
+    }
+
+    .sentence {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .jp {
+      font-size: 18px;
+      color: #4b5563;
+      margin-bottom: 15px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      border: 1px solid #9ca3af;
+      border-radius: 6px;
+      background: white;
+    }
+
+    button {
+      background: #d6a300;
+      color: #111827;
+      border: none;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #c29200;
+    }
+
+    .result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .incorrect {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="quiz-container">
+    <h1>Unit 2 Interactive Quiz – Introducing Somebody Else</h1>
+
+    <div class="instructions">
+      Choose the correct word from the list to complete each sentence.<br>
+      リストから正しい単語を選んで、文を完成させましょう。
+    </div>
+
+    <div class="word-bank">
+      <strong>Word Bank:</strong><br>
+      introduce / is / handles / leads / closely / manages / expert / been / oversees / provides
+    </div>
+
+    <div id="quiz"></div>
+
+    <button onclick="checkAnswers()">Check Answer / 答え合わせ</button>
+
+    <div id="score" class="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        title: "1. Introducing a colleague / 同僚を紹介する",
+        sentence: "Let me ____ Ken.",
+        jp: "Kenを紹介させてください。",
+        answer: "introduce"
+      },
+      {
+        title: "2. Basic introduction / 基本の紹介",
+        sentence: "This ____ Ms. Tanaka.",
+        jp: "こちらは田中さんです。",
+        answer: "is"
+      },
+      {
+        title: "3. Job responsibility / 担当業務",
+        sentence: "He ____ marketing.",
+        jp: "彼はマーケティングを担当しています。",
+        answer: "handles"
+      },
+      {
+        title: "4. Leadership role / リーダーシップ",
+        sentence: "She ____ the sales team.",
+        jp: "彼女は営業チームを率いています。",
+        answer: "leads"
+      },
+      {
+        title: "5. Collaboration / 協力関係",
+        sentence: "He works ____ with clients.",
+        jp: "彼は顧客と密接に働いています。",
+        answer: "closely"
+      },
+      {
+        title: "6. Project management / プロジェクト管理",
+        sentence: "She ____ projects in Tokyo.",
+        jp: "彼女は東京でプロジェクトを管理しています。",
+        answer: "manages"
+      },
+      {
+        title: "7. Expertise / 専門分野",
+        sentence: "He is an ____ in finance.",
+        jp: "彼は金融の専門家です。",
+        answer: "expert"
+      },
+      {
+        title: "8. Experience / 経験",
+        sentence: "She has ____ with us for five years.",
+        jp: "彼女は5年間当社に勤めています。",
+        answer: "been"
+      },
+      {
+        title: "9. Oversight / 管理・監督",
+        sentence: "He ____ operations.",
+        jp: "彼は業務を監督しています。",
+        answer: "oversees"
+      },
+      {
+        title: "10. Support role / サポート業務",
+        sentence: "She ____ support to the team.",
+        jp: "彼女はチームを支援しています。",
+        answer: "provides"
+      }
+    ];
+
+    const words = [
+      "introduce", "is", "handles", "leads", "closely",
+      "manages", "expert", "been", "oversees", "provides"
+    ];
+
+    const quizDiv = document.getElementById("quiz");
+
+    questions.forEach((q, index) => {
+      const options = words.map(word => `<option value="${word}">${word}</option>`).join("");
+
+      quizDiv.innerHTML += `
+        <div class="question">
+          <h2>${q.title}</h2>
+          <div class="sentence">${q.sentence}</div>
+          <div class="jp">${q.jp}</div>
+
+          <select id="q${index}">
+            <option value="">Choose a word</option>
+            ${options}
+          </select>
+
+          <div id="result${index}" class="result"></div>
+        </div>
+      `;
+    });
+
+    function checkAnswers() {
+      let score = 0;
+
+      questions.forEach((q, index) => {
+        const userAnswer = document.getElementById(`q${index}`).value;
+        const result = document.getElementById(`result${index}`);
+
+        if (userAnswer === q.answer) {
+          result.textContent = "Correct! / 正解！";
+          result.className = "result correct";
+          score++;
+        } else {
+          result.textContent = `Try again. / もう一度やってみましょう。`;
+          result.className = "result incorrect";
+        }
+      });
+
+      document.getElementById("score").textContent =
+        `Score: ${score} / ${questions.length}`;
+    }
+  </script>
+</body>
+</html>
