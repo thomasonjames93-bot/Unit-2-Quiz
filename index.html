@@ -81,8 +81,8 @@
       background: #d6a300;
       color: #111827;
       border: none;
-      padding: 14px 22px;
-      font-size: 18px;
+      padding: 12px 18px;
+      font-size: 16px;
       font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
@@ -96,7 +96,7 @@
     .result {
       font-size: 18px;
       font-weight: bold;
-      margin-top: 12px;
+      margin-top: 10px;
     }
 
     .correct {
@@ -124,10 +124,6 @@
     </div>
 
     <div id="quiz"></div>
-
-    <button onclick="checkAnswers()">Check Answer / 答え合わせ</button>
-
-    <div id="score" class="result"></div>
   </div>
 
   <script>
@@ -215,30 +211,30 @@
             ${options}
           </select>
 
+          <button onclick="checkOneAnswer(${index})">
+            Check Answer / 答え合わせ
+          </button>
+
           <div id="result${index}" class="result"></div>
         </div>
       `;
     });
 
-    function checkAnswers() {
-      let score = 0;
+    function checkOneAnswer(index) {
+      const userAnswer = document.getElementById(`q${index}`).value;
+      const result = document.getElementById(`result${index}`);
+      const correctAnswer = questions[index].answer;
 
-      questions.forEach((q, index) => {
-        const userAnswer = document.getElementById(`q${index}`).value;
-        const result = document.getElementById(`result${index}`);
-
-        if (userAnswer === q.answer) {
-          result.textContent = "Correct! / 正解！";
-          result.className = "result correct";
-          score++;
-        } else {
-          result.textContent = `Try again. / もう一度やってみましょう。`;
-          result.className = "result incorrect";
-        }
-      });
-
-      document.getElementById("score").textContent =
-        `Score: ${score} / ${questions.length}`;
+      if (userAnswer === "") {
+        result.textContent = "Please choose a word. / 単語を選んでください。";
+        result.className = "result incorrect";
+      } else if (userAnswer === correctAnswer) {
+        result.textContent = "Correct! / 正解！";
+        result.className = "result correct";
+      } else {
+        result.textContent = "Try again. / もう一度やってみましょう。";
+        result.className = "result incorrect";
+      }
     }
   </script>
 </body>
